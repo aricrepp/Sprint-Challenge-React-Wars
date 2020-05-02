@@ -1,7 +1,29 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import axios from "axios";
+import CharacterContainer from "./components/CharacterContainer";
+import Paganation from "./components/Paganation"
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {
+  Navbar,
+  NavbarBrand
+} from "reactstrap";
 import './App.css';
 
 const App = () => {
+
+  const [data, setData] = useState([]);
+  const [pageNum, setPageNum] = useState(2);
+
+  useEffect(() => {
+    axios.get(`https://rickandmortyapi.com/api/character/?page=${pageNum}`)
+    .then(response => {
+      // console.log(response.data);
+      setData(response.data.results);
+    })
+    .catch(err => {
+        console.log(err);
+    })
+  }, [])
   // Try to think through what state you'll need for this app before starting. Then build out
   // the state properties here.
 
@@ -11,7 +33,9 @@ const App = () => {
 
   return (
     <div className="App">
-      <h1 className="Header">Characters</h1>
+      <Navbar fixed="top" className="Header navbar"><NavbarBrand>Rick and Morty</NavbarBrand></Navbar>
+      <CharacterContainer data={data}/>
+      <footer className="footer"><Paganation /></footer>
     </div>
   );
 }
